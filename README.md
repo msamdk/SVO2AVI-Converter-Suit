@@ -1,7 +1,7 @@
 ## SVO to AVI batch Converter app for ZED camera systems
 
 This tool provides a simple and efficient workflow for processing multiple .svo or .svo2 files, saving you from the tedious task of converting them one by one through the command line.
-The main conversion script is made by the stereolabs. You can also clone the zed-sdk repository from [ZED SDK](https://www.stereolabs.com/en-dk/developers/release/5.0). 
+The main conversion script is made by the stereolabs. You can also clone the zed-sdk repository from [here](https://www.stereolabs.com/en-dk/developers/release/5.0](https://github.com/stereolabs/zed-sdk/tree/master/recording/export/svo/python)). 
 
 <img src="images/app.png" alt="Alt text" width="600">
 
