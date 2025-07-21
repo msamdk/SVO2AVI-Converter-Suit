@@ -13,8 +13,6 @@ zed sdk -> recording -> export -> svo -> python -> svo_export.py
 
 ## Features
 - Batch Conversion: Process an entire folder of .svo and .svo2 files in one go.
-
-- Modern UI: A sleek, full-black user interface with custom-drawn rounded frames.
 - Real-time Progress:
    - An overall progress bar tracks the entire batch of files.
    - A per-file progress bar shows the status of the current conversion.
