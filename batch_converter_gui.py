@@ -5,11 +5,12 @@ import subprocess
 import threading
 import queue
 import re
+from PIL import Image, ImageTk
 
 # --- Style Constants ---
-BG_COLOR = "#121212"  
-CONTENT_BG = "#1E1E1E" 
-BORDER_COLOR = "#333333" 
+BG_COLOR = "#121212"  # A modern, off-black
+CONTENT_BG = "#1E1E1E" # Background for frames and entries
+BORDER_COLOR = "#333333" # Dark grey for borders
 TEXT_COLOR = "#EAEAEA"
 TEAL_COLOR = "#008080"
 TEAL_ACTIVE_COLOR = "#006666"
@@ -19,7 +20,7 @@ PROGRESS_RED = (220, 38, 38)
 PROGRESS_BLUE = (59, 130, 246)
 
 class RoundedLabelFrame(tk.Frame):
-    
+    """A custom frame with rounded corners and a label, drawn on a canvas."""
     def __init__(self, parent, text="", pad=10, radius=25,
                  color_bg=BG_COLOR, color_fill=CONTENT_BG, color_border=BORDER_COLOR):
         super().__init__(parent, bg=color_bg, padx=pad, pady=pad)
@@ -126,11 +127,28 @@ class SVOConverterApp:
         main_frame = ttk.Frame(root, padding="10")
         main_frame.grid(row=0, column=0, sticky='nsew')
         main_frame.grid_columnconfigure(0, weight=1)
-        main_frame.grid_rowconfigure(2, weight=1)
+        main_frame.grid_rowconfigure(3, weight=1)
+
+        # --- HEADER WITH LOGO ---
+        try:
+            logo_image_original = Image.open("svo.png") 
+            target_height = 50 
+            original_width, original_height = logo_image_original.size
+            aspect_ratio = original_width / original_height
+            target_width = int(target_height * aspect_ratio)
+            logo_image_resized = logo_image_original.resize((target_width, target_height), Image.Resampling.LANCZOS)
+            self.logo_photo = ImageTk.PhotoImage(logo_image_resized)
+
+            logo_label = tk.Label(main_frame, image=self.logo_photo, bg=BG_COLOR)
+            # Place the logo at the top (row 0), with padding below it
+            logo_label.grid(row=0, column=0, sticky='n', pady=(5, 20))
+        except FileNotFoundError:
+            print("logo.png not found, skipping logo display.")
+        
 
         # --- I/O Frame ---
         io_frame = RoundedLabelFrame(main_frame, text="1. Select Folders")
-        io_frame.grid(row=0, column=0, sticky='ew', pady=5)
+        io_frame.grid(row=1, column=0, sticky='ew', pady=5)
         io_content = io_frame.content_frame
         io_content.grid_columnconfigure(0, weight=1)
         
@@ -144,7 +162,7 @@ class SVOConverterApp:
 
         # --- Control & Progress Frame ---
         control_frame = RoundedLabelFrame(main_frame, text="2. Conversion Control & Progress")
-        control_frame.grid(row=1, column=0, sticky='ew', pady=15)
+        control_frame.grid(row=2, column=0, sticky='ew', pady=15)
         control_content = control_frame.content_frame
         control_content.grid_columnconfigure(0, weight=1)
 
@@ -169,7 +187,7 @@ class SVOConverterApp:
 
         # --- Log Output Frame ---
         log_frame = RoundedLabelFrame(main_frame, text="3. Conversion Log")
-        log_frame.grid(row=2, column=0, sticky='nsew', pady=5)
+        log_frame.grid(row=3, column=0, sticky='nsew', pady=5)
         self.log_text = scrolledtext.ScrolledText(log_frame.content_frame, state='disabled', wrap=tk.WORD,
                                                  bg=CONTENT_BG, fg=TEXT_COLOR, relief=tk.FLAT, bd=0, insertbackground=TEXT_COLOR)
         self.log_text.pack(fill=tk.BOTH, expand=True)
