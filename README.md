@@ -39,6 +39,7 @@ Before you begin, ensure you have the following installed:
     - pyzed (This is installed with the ZED SDK's Python API)
     - opencv-python
     - numpy
+    - Pillow
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## Setup and Installation
@@ -65,7 +66,7 @@ If you don't get an error, you're good to go. If you do, please reinstall the ZE
 The svo_export.py script requires OpenCV and NumPy. You can install them using pip:
 
 ```bash
-pip install opencv-python numpy
+pip install opencv-python numpy Pillow
 ```
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
