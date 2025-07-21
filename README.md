@@ -68,6 +68,38 @@ The svo_export.py script requires OpenCV and NumPy. You can install them using p
 pip install opencv-python numpy
 ```
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## How to Use 
+1. File Placement: Make sure both svo_export.py and batch_converter_gui.py are in the same directory.
+2. Run the Application: Open your terminal, navigate to the project directory, and run the GUI script:
+
+```bash
+python batch_converter_gui.py
+```
+3. Select Folders:
+
+  - Click "Browse..." to select the Input Directory containing your .svo or .svo2 files.
+  - Click "Browse..." again to select the Output Directory where the converted .avi files will be saved.
+
+4. Start Converting
+  - Click the "Start Conversion" button.
+  - Watch the progress bars and log update in real-time.
+  - If you need to interrupt the process, click the red "Stop Conversion" button.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+## File Structure
+
+- svo_export.py: The original command-line conversion script provided by Stereolabs. This script is called as a subprocess by the GUI for each file.
+- batch_converter_gui.py: The main application file that provides the graphical user interface and batch processing logic. This is the file you run.
+- README.md: This file.
+
+
+
+
+
+
+
+
 
 
 
