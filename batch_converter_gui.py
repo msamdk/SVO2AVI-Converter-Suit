@@ -7,9 +7,9 @@ import queue
 import re
 
 # --- Style Constants ---
-BG_COLOR = "#121212"  # A modern, off-black
-CONTENT_BG = "#1E1E1E" # Background for frames and entries
-BORDER_COLOR = "#333333" # Dark grey for borders
+BG_COLOR = "#121212"  
+CONTENT_BG = "#1E1E1E" 
+BORDER_COLOR = "#333333" 
 TEXT_COLOR = "#EAEAEA"
 TEAL_COLOR = "#008080"
 TEAL_ACTIVE_COLOR = "#006666"
@@ -19,7 +19,7 @@ PROGRESS_RED = (220, 38, 38)
 PROGRESS_BLUE = (59, 130, 246)
 
 class RoundedLabelFrame(tk.Frame):
-    """A custom frame with rounded corners and a label, drawn on a canvas."""
+    
     def __init__(self, parent, text="", pad=10, radius=25,
                  color_bg=BG_COLOR, color_fill=CONTENT_BG, color_border=BORDER_COLOR):
         super().__init__(parent, bg=color_bg, padx=pad, pady=pad)
