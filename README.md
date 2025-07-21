@@ -13,6 +13,7 @@ This tool provides a simple and efficient workflow for processing multiple .svo 
 - Full Control: A Start/Stop button allows you to begin and interrupt the conversion process at any time.
 - Clean Log Output: A dedicated log panel shows important status messages and errors without being cluttered by raw progress data.
 
+--------------------------------------------------------------------------------------------------------------------------------------------------
 ## Requirements
 Before you begin, ensure you have the following installed:
 
