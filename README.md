@@ -42,11 +42,24 @@ Follow these steps to get the project running on your local machine.
 First, clone this repository to your computer using Git:
 
 ```bash
-git clone <your-repository-url>
-cd <your-repository-name>
+git clone <repository-url>
+cd <path to the cloned repository>
 ```
 
+2. Verify ZED SDK and Python API
+Ensure your ZED SDK and the pyzed wrapper are installed correctly. You can test this by trying to import the library in a Python shell:
 
+```python
+import pyzed.sl as sl
+```
+If you don't get an error, you're good to go. If you do, please reinstall the ZED SDK and ensure you select the Python API for your Python version during setup.
+
+3. Install Python Dependencies
+The svo_export.py script requires OpenCV and NumPy. You can install them using pip:
+
+```bash
+pip install opencv-python numpy
+```
 
 
 
