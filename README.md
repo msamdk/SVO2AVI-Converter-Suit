@@ -2,7 +2,7 @@
 
 This tool provides a simple and efficient workflow for processing multiple .svo or .svo2 files, saving you from the tedious task of converting them one by one through the command line.
 
-<img src="images/data_str.jpg" alt="Alt text" width="1200">
+<img src="images/app.png" alt="Alt text" width="1200">
 
 ## Features
 - Batch Conversion: Process an entire folder of .svo and .svo2 files in one go.
