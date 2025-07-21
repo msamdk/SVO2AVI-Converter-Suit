@@ -131,7 +131,7 @@ class SVOConverterApp:
 
         # --- HEADER WITH LOGO ---
         try:
-            logo_image_original = Image.open("svo.png") 
+            logo_image_original = Image.open("images/svo.png") 
             target_height = 50 
             original_width, original_height = logo_image_original.size
             aspect_ratio = original_width / original_height
