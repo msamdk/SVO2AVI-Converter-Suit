@@ -32,4 +32,11 @@ Before you begin, ensure you have the following installed:
     - pyzed (This is installed with the ZED SDK's Python API)
     - opencv-python
     - numpy
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
+## Setup and Installation
+
+Follow these steps to get the project running on your local machine.
+
+1. Clone the Repository
+First, clone this repository to your computer using Git:
