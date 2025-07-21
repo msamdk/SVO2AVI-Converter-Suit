@@ -23,8 +23,10 @@ Before you begin, ensure you have the following installed:
 
 - ZED SDK: This is the most crucial requirement. You must install the SDK from the Stereolabs website.
 
-  - ➡️ Download the ZED SDK
-  - Important: During the ZED SDK installation, make sure to install the Python API.
+  - ➡️ Download the ZED SDK [here]([https://www.example.com](https://www.stereolabs.com/en-dk/developers/release/5.0)).
+  - Important: During the ZED SDK installation, make sure to install the Python API. follow the instructions of the documentation in the official website of the stereolabs website
+  - Link to the Stereolabs documentation [here]([https://www.example.com](https://www.stereolabs.com/docs/development/python/install)).
+    
 
 - Required Python Libraries:
     - pyzed (This is installed with the ZED SDK's Python API)
