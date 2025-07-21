@@ -3,6 +3,12 @@
 This tool provides a simple and efficient workflow for processing multiple .svo or .svo2 files, saving you from the tedious task of converting them one by one through the command line.
 The main conversion script is made by the stereolabs. You can also clone the zed-sdk repository from [here](https://github.com/stereolabs/zed-sdk.git). 
 
+You can find the main svo to avi conversion script in the following path of the zed-sdk repository of stereolabs. But i have added the script in this repository.
+
+```txt
+zed sdk -> recording -> export -> svo -> python -> svo_export.py
+```
+
 <img src="images/app.png" alt="Alt text" width="600">
 
 ## Features
