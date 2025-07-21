@@ -93,9 +93,11 @@ python batch_converter_gui.py
 - batch_converter_gui.py: The main application file that provides the graphical user interface and batch processing logic. This is the file you run.
 - README.md: This file.
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
-
+## License
+- The batch converter GUI (batch_converter_gui.py) is released under the MIT License.
+- Please note that the svo_export.py script is provided by Stereolabs and is subject to its own license, which can be found in the header of the file.
 
 
 
