@@ -26,16 +26,17 @@ zed sdk -> recording -> export -> svo -> python -> svo_export.py
 ## Requirements
 Before you begin, ensure you have the following installed:
 
-- Python 3.x
+- **Python 3.7+**
 
-- ZED SDK: This is the most crucial requirement. You must install the SDK from the Stereolabs website.
+- **ZED SDK**: This is the most crucial requirement. You must install the SDK from the Stereolabs website.
 
   - ➡️ Download the [ZED SDK](https://www.stereolabs.com/en-dk/developers/release/5.0).
   - Important: During the ZED SDK installation, make sure to install the Python API. follow the instructions of the documentation in the official website of the stereolabs website
   - [ZED documentation - Python](https://www.stereolabs.com/en-dk/developers/release/5.0](https://www.stereolabs.com/docs/development/python/install)).
-    
+  - 
+ - **NVIDIA CUDA**: The ZED SDK requires a compatible version of the NVIDIA CUDA Toolkit.   
 
-- Required Python Libraries:
+- **Required Python Libraries**:
     - pyzed (This is installed with the ZED SDK's Python API)
     - opencv-python
     - numpy
