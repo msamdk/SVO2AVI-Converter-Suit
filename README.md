@@ -88,7 +88,7 @@ python svo_conv.py
 * Click **Browse** to choose the **Output Directory** where the converted AVI files will be saved.
 * Press **Start Conversion** to begin the process.
 
-**3. For Trimming a Single Video**
+**For Trimming a Single Video**
 * Navigate to the **Trim Settings** tab.
 * Under "Select Files & Convert", click **Browse** to select a single **Input Video File** (.svo or .svo2).
 * The video will load in the preview panel. Use the **timeline slider** or the **▶/⏸** button to find the segment you want to trim.
