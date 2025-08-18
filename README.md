@@ -13,13 +13,14 @@ zed sdk -> recording -> export -> svo -> python -> svo_export.py
 
 
 ## Features
-- Batch Conversion: Process an entire folder of .svo and .svo2 files in one go.
-- Real-time Progress:
-   - An overall progress bar tracks the entire batch of files.
-   - A per-file progress bar shows the status of the current conversion.
-- Dynamic Progress Bar: The current file's progress bar animates with a color gradient from red to blue for a clear visual indicator.
-- Full Control: A Start/Stop button allows you to begin and interrupt the conversion process at any time.
-- Clean Log Output: A dedicated log panel shows important status messages and errors without being cluttered by raw progress data.
+
+* **Batch Conversion**: Convert multiple `.svo` or `.svo2` files from a selected folder in one go.
+* **Video Trimming**: A dedicated tab to load a single SVO file, preview its contents, and select specific start and end frames for export.
+* **Interactive Preview**: A visual timeline slider allows you to scrub through the video. Play/pause controls are included for easy navigation.
+* **Precise Frame Selection**: Set trim points using intuitive "In" and "Out" buttons or by manually typing in the exact frame numbers.
+* **Real-time Feedback**: View detailed conversion logs and monitor progress with both individual and overall progress bars.
+* **Modern UI**: A clean, themed interface built with Tkinter for a better user experience.
+* **Built-in Documentation**: A handy documentation tab explaining the core features of the application.
 
 --------------------------------------------------------------------------------------------------------------------------------------------------
 ## Requirements
