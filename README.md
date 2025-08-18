@@ -2,6 +2,8 @@
 
 A user-friendly desktop application for batch converting and trimming ZED SVO files to the AVI format. This tool provides a graphical user interface (GUI) to simplify the video export process, leveraging the power of the Stereolabs ZED SDK. You can also clone the zed-sdk repository from [here](https://github.com/stereolabs/zed-sdk.git). 
 
+<img src="images/batch conv.png" alt="Alt text" width="800">
+<img src="images/trim settings.png" alt="Alt text" width="800">
 
 You can find the main svo to avi conversion script in the following path of the zed-sdk repository of stereolabs. But i have added the script in this repository.
 
@@ -9,7 +11,6 @@ You can find the main svo to avi conversion script in the following path of the 
 zed sdk -> recording -> export -> svo -> python -> svo_export.py
 ```
 
-<img src="images/app.png" alt="Alt text" width="600">
 
 ## Features
 - Batch Conversion: Process an entire folder of .svo and .svo2 files in one go.
