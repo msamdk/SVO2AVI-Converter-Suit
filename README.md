@@ -50,15 +50,20 @@ Before you begin, ensure you have the following installed:
 
 Follow these steps to get the project running on your local machine.
 
-1. Clone the Repository
+**Step 1. Clone the Repository**
 First, clone this repository to your computer using Git:
 
 ```bash
 git clone <repository-url>
 cd <path to the cloned repository>
 ```
+**Step 2. Install Required Python Libraries**
+The necessary Python packages are listed in the `requirements.txt` file. Install them using pip:
+```bash
+pip install -r requirements.txt
+```
 
-2. Verify ZED SDK and Python API
+**Step 3. Verify ZED SDK and Python API**
 Ensure your ZED SDK and the pyzed wrapper are installed correctly. You can test this by trying to import the library in a Python shell:
 
 ```python
@@ -66,43 +71,48 @@ import pyzed.sl as sl
 ```
 If you don't get an error, you're good to go. If you do, please reinstall the ZED SDK and ensure you select the Python API for your Python version during setup.
 
-3. Install Python Dependencies
-The svo_export.py script requires OpenCV and NumPy. You can install them using pip:
-
-```bash
-pip install opencv-python numpy Pillow
-```
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## How to Use 
-1. File Placement: Make sure both svo_export.py and batch_converter_gui.py are in the same directory.
+1. File Placement: Make sure both svo_export.py and svo_conv.py are in the same directory.
 2. Run the Application: Open your terminal, navigate to the project directory, and run the GUI script:
 
 ```bash
-python batch_converter_gui.py
+python svo_conv.py
 ```
-3. Select Folders:
 
-  - Click "Browse..." to select the Input Directory containing your .svo or .svo2 files.
-  - Click "Browse..." again to select the Output Directory where the converted .avi files will be saved.
+**For Batch Conversion**
+* Navigate to the **Batch Conversion** tab.
+* Click **Browse** to select the **Input Directory** containing your SVO files.
+* Click **Browse** to choose the **Output Directory** where the converted AVI files will be saved.
+* Press **Start Conversion** to begin the process.
 
-4. Start Converting
-  - Click the "Start Conversion" button.
-  - Watch the progress bars and log update in real-time.
-  - If you need to interrupt the process, click the red "Stop Conversion" button.
+**3. For Trimming a Single Video**
+* Navigate to the **Trim Settings** tab.
+* Under "Select Files & Convert", click **Browse** to select a single **Input Video File** (.svo or .svo2).
+* The video will load in the preview panel. Use the **timeline slider** or the **▶/⏸** button to find the segment you want to trim.
+* Use the **✂ In** and **✂ Out** buttons to mark the start and end points of your clip. For more precision, you can type frame numbers directly into the **Start/End Frame** boxes and press `Enter`.
+* Select an **Output Directory**.
+* Click **Start Conversion** to export only the trimmed section.
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 ## File Structure
 
 - svo_export.py: The original command-line conversion script provided by Stereolabs. This script is called as a subprocess by the GUI for each file.
-- batch_converter_gui.py: The main application file that provides the graphical user interface and batch processing logic. This is the file you run.
-- README.md: This file.
+- svo_conv.py: The main application file that provides the graphical user interface and file converter logic. This is the file you run.
+- README.md: This file explains the steps to follow for deploying the svo converter suit.
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## License
 - The batch converter GUI (batch_converter_gui.py) is released under the MIT License.
-- Please note that the svo_export.py script is provided by Stereolabs and is subject to its own license, which can be found in the header of the file.
+
+## Acknowledgments
+
+This application was developed by **Samitha Thilakarathna**, a PhD student at DTU Aqua, Technical University of Denmark.
+
+It is built upon the original SVO export script provided by Stereolabs in the ZED SDK and is designed to enhance its functionality for specific research and application needs.
 
 
 
