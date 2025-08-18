@@ -46,7 +46,7 @@ def main(opt):
     svo_input_path = opt.input_svo_file
     output_dir = opt.output_path_dir
     avi_output_path = opt.output_avi_file 
-    output_as_video = True    
+    output_as_video = True     
     app_type = AppType.LEFT_AND_RIGHT
     if opt.mode == 1 or opt.mode == 3:
         app_type = AppType.LEFT_AND_DEPTH
@@ -107,12 +107,33 @@ def main(opt):
     
     rt_param = sl.RuntimeParameters()
 
-    # Start SVO conversion to AVI/SEQUENCE
-    sys.stdout.write("Converting SVO... Use Ctrl-C to interrupt conversion.\n")
-
+    # --- MODIFIED: Start SVO conversion to AVI/SEQUENCE with trimming ---
     nb_frames = zed.get_svo_number_of_frames()
+    
+    # Validate start frame
+    if not (0 <= opt.start_frame < nb_frames):
+        print(f"\nError: --start_frame ({opt.start_frame}) is out of SVO bounds (0-{nb_frames-1}).")
+        zed.close()
+        exit()
 
-    while True:
+    # Determine the end frame for the loop
+    end_frame = min(opt.end_frame, nb_frames) if opt.end_frame != -1 else nb_frames
+    
+    # Validate end frame
+    if end_frame <= opt.start_frame:
+        print(f"\nError: --end_frame ({end_frame}) must be greater than --start_frame ({opt.start_frame}).")
+        zed.close()
+        exit()
+    
+    # Set the SVO position to the desired start frame
+    zed.set_svo_position(opt.start_frame)
+    
+    sys.stdout.write(f"Converting SVO from frame {opt.start_frame} to {end_frame}... Use Ctrl-C to interrupt.\n")
+
+    frames_to_process = end_frame - opt.start_frame
+    frames_processed = 0
+
+    while frames_processed < frames_to_process:
         err = zed.grab(rt_param)
         if err == sl.ERROR_CODE.SUCCESS:
             svo_position = zed.get_svo_position()
@@ -143,7 +164,7 @@ def main(opt):
                 # Generate file names
                 filename1 = output_dir +"/"+ ("left%s.png" % str(svo_position).zfill(6))
                 filename2 = output_dir +"/"+ (("right%s.png" if app_type == AppType.LEFT_AND_RIGHT
-                                           else "depth%s.png") % str(svo_position).zfill(6))
+                                             else "depth%s.png") % str(svo_position).zfill(6))
                 # Save Left images
                 cv2.imwrite(str(filename1), left_image.get_data())
 
@@ -154,17 +175,23 @@ def main(opt):
                     # Save depth images (convert to uint16)
                     cv2.imwrite(str(filename2), depth_image.get_data().astype(np.uint16))
 
-            # Display progress
-            progress_bar((svo_position + 1) / nb_frames * 100, 30)
-        if err == sl.ERROR_CODE.END_OF_SVOFILE_REACHED:
-            progress_bar(100 , 30)
-            sys.stdout.write("\nSVO end has been reached. Exiting now.\n")
+            # Display progress based on the trimmed segment
+            frames_processed += 1
+            progress_bar(frames_processed / frames_to_process * 100, 30)
+
+        elif err == sl.ERROR_CODE.END_OF_SVOFILE_REACHED:
+            sys.stdout.write("\nSVO end has been reached unexpectedly. Exiting.\n")
             break
+        else:
+            sys.stdout.write(f"\nError grabbing frame: {err}. Exiting.\n")
+            break
+
     if output_as_video:
         # Close the video writer
         video_writer.release()
 
     zed.close()
+    print("\nConversion finished.")
     return 0
 
 
@@ -174,6 +201,11 @@ if __name__ == "__main__":
     parser.add_argument('--input_svo_file', type=str, required=True, help='Path to the .svo file')
     parser.add_argument('--output_avi_file', type=str, help='Path to the output .avi file, if mode includes a .avi export', default = '')
     parser.add_argument('--output_path_dir', type = str, help = 'Path to a directory, where .png will be written, if mode includes image sequence export', default = '')
+    
+    # --- NEW: Added start and end frame arguments ---
+    parser.add_argument('--start_frame', type=int, default=0, help='Frame to start the export from')
+    parser.add_argument('--end_frame', type=int, default=-1, help='Frame to end the export at (-1 means end of file)')
+
     opt = parser.parse_args()
     if opt.mode > 4 or opt.mode < 0 :
         print("Mode shoud be between 0 and 4 included. \n Mode 0 is to export LEFT+RIGHT AVI. \n Mode 1 is to export LEFT+DEPTH_VIEW Avi. \n Mode 2 is to export LEFT+RIGHT image sequence. \n Mode 3 is to export LEFT+DEPTH_View image sequence. \n Mode 4 is to export LEFT+DEPTH_16BIT image sequence.")
