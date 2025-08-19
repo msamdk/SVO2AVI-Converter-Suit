@@ -1,3 +1,17 @@
+#############################################################################################
+
+#   THIS APPLICATION IS MADE AS A SOLUTION TO THE RESEARCH WORKS CONDUCTED IN DTU AQUA, 
+#   SECTION OF FISHERIES TECHNOLOGY, TECHNICAL UNIVERSITY OF DENMARK. THE APPLICATION IS
+#   BUILD ON THE ORIGINAL SVO TO AVI FORMAT CONVERTER SCRIPT GIVEN BY THE STEREOLABS. 
+#   THE GUI IS MADE TO CONDUCT IN-HOUSE BATCH CONVERSION OF VIDEO CLIPS AND ALSO INDIVIDUAL
+#   CONVERSION WITH A TRIMMING FEATURE. THE APPLICATION WILL BE DEVELOPED AND UPDATED
+#   CONTINUOUSLY TO MEET THE ONGOING RESEARCH NEEDS.
+
+#   DEVELOPED BY SAMITHA N. THILARATHNA, PhD STUDENT, DTU AQUA
+
+
+#############################################################################################
+
 import tkinter as tk
 from tkinter import filedialog, scrolledtext, ttk, font
 import os
@@ -683,4 +697,5 @@ class SVOConverterApp:
 if __name__ == "__main__":
     root = tk.Tk()
     app = SVOConverterApp(root)
+
     root.mainloop()
