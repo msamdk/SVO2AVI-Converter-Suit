@@ -265,17 +265,30 @@ def _load_icons(self):
         self.current_time_label = ttk.Label(timeline_frame, text="00:00:00 / 00:00:00", font=('Consolas', 12), background=BG_COLOR, foreground="#cccccc")
         self.current_time_label.grid(row=0, column=1, sticky='e', padx=(0,5))
 
+        
         player_controls_frame = tk.Frame(player_container, bg=BG_COLOR)
-        player_controls_frame.grid(row=2, column=0, sticky='ew')
-        buttons_defs = {'✂ In': self._set_trim_start, '✂ Out': self._set_trim_end, '⏪': None, 'TOGGLE': self._toggle_playback, '⏩': None}
-        for i, (text, cmd) in enumerate(buttons_defs.items()):
-            player_controls_frame.grid_columnconfigure(i, weight=1)
-            if text == 'TOGGLE':
-                self.play_pause_button = tk.Button(player_controls_frame, text='▶', bg=TEAL_COLOR, fg='white', activebackground=TEAL_ACTIVE_COLOR, font=('Segoe UI', 12, 'bold'), relief='flat', borderwidth=0, command=cmd)
-                self.play_pause_button.grid(row=0, column=i, sticky='ew', padx=2, pady=(5,0))
-            else:
-                btn = tk.Button(player_controls_frame, text=text, bg=TEAL_COLOR, fg='white', activebackground=TEAL_ACTIVE_COLOR, font=('Segoe UI', 12, 'bold'), relief='flat', borderwidth=0, command=cmd)
-                btn.grid(row=0, column=i, sticky='ew', padx=2, pady=(5,0))
+        player_controls_frame.grid(row=2, column=0, sticky='ew', pady=(5, 0))
+
+        # Centralize button creation
+        button_configs = {
+            'trim_in': {'icon': self.trim_in_icon, 'cmd': self._set_trim_start},
+            'play_pause': {'icon': self.play_icon, 'cmd': self._toggle_playback},
+            'trim_out': {'icon': self.trim_out_icon, 'cmd': self._set_trim_end}
+        }
+
+        # Create a central frame for the buttons so they don't stretch
+        center_buttons_frame = tk.Frame(player_controls_frame, bg=BG_COLOR)
+        center_buttons_frame.pack()
+
+        # Create buttons with icons
+        self.trim_in_button = tk.Button(center_buttons_frame, image=button_configs['trim_in']['icon'], bg=TEAL_COLOR, activebackground=TEAL_ACTIVE_COLOR, relief='flat', borderwidth=0, command=button_configs['trim_in']['cmd'])
+        self.trim_in_button.pack(side=tk.LEFT, padx=10)
+        
+        self.play_pause_button = tk.Button(center_buttons_frame, image=button_configs['play_pause']['icon'], bg=TEAL_COLOR, activebackground=TEAL_ACTIVE_COLOR, relief='flat', borderwidth=0, command=button_configs['play_pause']['cmd'])
+        self.play_pause_button.pack(side=tk.LEFT, padx=10)
+
+        self.trim_out_button = tk.Button(center_buttons_frame, image=button_configs['trim_out']['icon'], bg=TEAL_COLOR, activebackground=TEAL_ACTIVE_COLOR, relief='flat', borderwidth=0, command=button_configs['trim_out']['cmd'])
+        self.trim_out_button.pack(side=tk.LEFT, padx=10)
 
         trim_details_frame = ttk.Frame(player_container, style='TFrame', padding=(0, 10))
         trim_details_frame.grid(row=3, column=0, sticky='ew')
@@ -386,13 +399,19 @@ def _load_icons(self):
             self._play_video()
 
     def _play_video(self):
-        
         if self.is_playing or not self.trim_video_capture: return
         self.is_playing = True
         if self.play_pause_button:
-            self.play_pause_button.config(text='⏸')
+            # MODIFIED: Use image instead of text
+            if self.pause_icon: self.play_pause_button.config(image=self.pause_icon)
         delay = int(1000 / self.trim_fps) if self.trim_fps > 0 else 33
         self._playback_loop(delay)
+
+    def _pause_video(self):
+        self.is_playing = False
+        if self.play_pause_button:
+            # MODIFIED: Use image instead of text
+            if self.play_icon: self.play_pause_button.config(image=self.play_icon)
 
     def _playback_loop(self, delay):
         
@@ -727,4 +746,5 @@ if __name__ == "__main__":
     app = SVOConverterApp(root)
 
     root.mainloop()
+
 
