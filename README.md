@@ -18,10 +18,13 @@ zed sdk -> recording -> export -> svo -> python -> svo_export.py
 * **Video Trimming**: A dedicated tab to load a single SVO file, preview its contents, and select specific start and end frames for export.
 * **Interactive Preview**: A visual timeline slider allows you to scrub through the video. Play/pause controls are included for easy navigation.
 * **Precise Frame Selection**: Set trim points using intuitive "In" and "Out" buttons or by manually typing in the exact frame numbers.
+* **Instant frame capture**: Capture a specific frame in the time line according to your needs
+* **Export Images**: Export the images after selecting/ definining frame numbers to your desired folder. This will be a convenient step if you are interested in image annotations for computer vision applications.
 * **Real-time Feedback**: View detailed conversion logs and monitor progress with both individual and overall progress bars.
 * **Real-time Frame count**: The frame number is displayed as an overlay on the video to get the precise frame for analysis
 * **Modern UI**: A clean, themed interface built with Tkinter for a better user experience.
 * **Built-in Documentation**: A handy documentation tab explaining the core features of the application.
+  
 
 --------------------------------------------------------------------------------------------------------------------------------------------------
 ## Requirements
