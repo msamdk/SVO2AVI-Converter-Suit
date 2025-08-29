@@ -1,8 +1,8 @@
 #############################################################################################
 
-#   THIS APPLICATION IS MADE AS A SOLUTION TO THE RESEARCH WORKS CONDUCTED IN DTU AQUA, 
+#   THIS APPLICATION IS MADE AS A SOLUTION TO THE RESEARCH WORKS CONDUCTED IN DTU AQUA,
 #   SECTION OF FISHERIES TECHNOLOGY, TECHNICAL UNIVERSITY OF DENMARK. THE APPLICATION IS
-#   BUILD ON THE ORIGINAL SVO TO AVI FORMAT CONVERTER SCRIPT GIVEN BY THE STEREOLABS. 
+#   BUILD ON THE ORIGINAL SVO TO AVI FORMAT CONVERTER SCRIPT GIVEN BY THE STEREOLABS.
 #   THE GUI IS MADE TO CONDUCT IN-HOUSE BATCH CONVERSION OF VIDEO CLIPS AND ALSO INDIVIDUAL
 #   CONVERSION WITH A TRIMMING FEATURE. THE APPLICATION WILL BE DEVELOPED AND UPDATED
 #   CONTINUOUSLY TO MEET THE ONGOING RESEARCH NEEDS.
@@ -13,7 +13,7 @@
 #############################################################################################
 
 import tkinter as tk
-from tkinter import filedialog, scrolledtext, ttk, font
+from tkinter import filedialog, scrolledtext, ttk
 import os
 import subprocess
 import threading
@@ -75,21 +75,20 @@ class RoundedLabelFrame(tk.Frame):
         self.content_frame.place(in_=self._canvas, x=2, y=2, relwidth=1, relheight=1, width=-4, height=-4)
 
 class SVOConverterApp:
-    
     def __init__(self, root):
         self.root = root
         self.root.title("SVO Converter Suite")
         self.root.geometry("1050x900")
         self.root.configure(bg=BG_COLOR)
-        
+
         self.root.grid_columnconfigure(0, weight=1)
-        self.root.grid_rowconfigure(0, weight=1) 
+        self.root.grid_rowconfigure(0, weight=1)
 
         self.batch_input_dir, self.batch_output_dir = tk.StringVar(), tk.StringVar()
         self.trim_input_file, self.trim_output_dir = tk.StringVar(), tk.StringVar()
-        
+
         self.start_frame_var, self.end_frame_var = tk.StringVar(), tk.StringVar()
-        
+
         self.log_queue, self.progress_queue = queue.Queue(), queue.Queue()
         self.stop_event, self.running_process = threading.Event(), None
         self.trim_video_capture = None
@@ -97,11 +96,19 @@ class SVOConverterApp:
         self.trim_fps = 30
         self.trim_start_frame, self.trim_end_frame = 0, 0
         self.is_playing = False
-        
+
         self.play_pause_button = None
 
         self._create_styles()
         
+        # --- MOVED ICON LOADING HERE ---
+        # Icons must be loaded BEFORE creating the tabs that use them.
+        self.play_icon = None
+        self.pause_icon = None
+        self.trim_in_icon = None
+        self.trim_out_icon = None
+        self._load_icons()
+
         self.notebook = ttk.Notebook(root, style='TNotebook')
         self.notebook.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 
@@ -111,29 +118,23 @@ class SVOConverterApp:
         self.notebook.add(self.batch_tab, text='Batch Conversion')
         self.notebook.add(self.trim_tab, text='Trim Settings')
         self.notebook.add(self.doc_tab, text='Documentation')
-        
+
         self.batch_log_text = None
         self.trim_log_text = None
 
         self._create_batch_tab()
         self._create_trim_tab()
         self._create_doc_tab()
-        
+
         self.root.after(100, self.process_queues)
 
-        self.play_icon = None
-        self.pause_icon = None
-        self.trim_in_icon = None
-        self.trim_out_icon = None
-        self._load_icons() # Call the new method to load icons
-        
-def _load_icons(self):
+    def _load_icons(self):
         """Loads and resizes icons from the 'icons' subfolder."""
         try:
             # Construct path to the icons folder relative to the script
             script_dir = os.path.dirname(__file__)
             icon_path = os.path.join(script_dir, "icons")
-            
+
             # Define desired icon size
             icon_size = (24, 24) # Adjust size as needed for your UI
 
@@ -142,13 +143,11 @@ def _load_icons(self):
             self.pause_icon = ImageTk.PhotoImage(Image.open(os.path.join(icon_path, "pause.png")).resize(icon_size, Image.Resampling.LANCZOS))
             self.trim_in_icon = ImageTk.PhotoImage(Image.open(os.path.join(icon_path, "trim_in.png")).resize(icon_size, Image.Resampling.LANCZOS))
             self.trim_out_icon = ImageTk.PhotoImage(Image.open(os.path.join(icon_path, "trim_out.png")).resize(icon_size, Image.Resampling.LANCZOS))
-            
+
             self.log("Icons loaded successfully.\n")
         except Exception as e:
             self.log(f"Error loading icons: {e}\n")
             self.play_icon = self.pause_icon = self.trim_in_icon = self.trim_out_icon = None
-            
-    
 
     def _create_styles(self):
         self.style = ttk.Style(self.root)
@@ -160,39 +159,37 @@ def _load_icons(self):
 
         self.style.configure('TLabel', background=CONTENT_BG, foreground=TEXT_COLOR, font=('Segoe UI', 12))
         self.style.configure('FrameTitle.TLabel', background=BG_COLOR, foreground=ACCENT_COLOR, font=('Segoe UI', 12, 'bold'))
-        
+
         self.style.configure('TEntry', fieldbackground=FIELD_BG, foreground=TEXT_COLOR, insertbackground=TEXT_COLOR, relief='flat', borderwidth=2, bordercolor=FIELD_BG)
         self.style.map('TEntry', bordercolor=[('focus', ACCENT_COLOR)])
-        
-        
-        self.style.configure('Frame.TEntry', 
-            fieldbackground=FRAME_ENTRY_BG, 
+
+        self.style.configure('Frame.TEntry',
+            fieldbackground=FRAME_ENTRY_BG,
             foreground='white',
             padding=(5, 8, 5, 8) # Left, Top, Right, Bottom
         )
         self.style.configure('Time.TLabel', background=TIME_DISPLAY_BG, foreground='white', padding=6, anchor='center', font=('Consolas', 12))
-        
+
         self.style.configure('ProgressPercent.TLabel', background=CONTENT_BG, foreground=TEXT_COLOR, font=('Segoe UI', 30, 'bold'), anchor='center')
 
         self.style.configure('TButton', background=TEAL_COLOR, foreground='white', font=('Segoe UI', 12, 'bold'), borderwidth=0, padding=(15, 8), relief='flat')
         self.style.map('TButton', background=[('active', TEAL_ACTIVE_COLOR)])
         self.style.configure('Stop.TButton', background=STOP_COLOR)
         self.style.map('Stop.TButton', background=[('active', STOP_ACTIVE_COLOR)])
-        
+
         self.style.configure('spectrum.Horizontal.TProgressbar', troughcolor=FIELD_BG, background=ACCENT_COLOR, borderwidth=0, thickness=12)
 
         self.style.configure('TNotebook', background=BG_COLOR, borderwidth=0)
         self.style.configure('TNotebook.Tab', background=CONTENT_BG, foreground=TEXT_COLOR, padding=[12, 6], font=('Segoe UI', 12, 'bold'), borderwidth=0)
         self.style.map('TNotebook.Tab', background=[('selected', ACCENT_COLOR)], foreground=[('selected', 'white')])
-        
+
         self.style.configure('Timeline.Horizontal.TScale', troughcolor=FIELD_BG, background=ACCENT_COLOR, troughrelief='flat', sliderrelief='flat')
         self.style.map('Timeline.Horizontal.TScale', background=[('active', TEAL_ACTIVE_COLOR)])
 
     def _create_batch_tab(self):
-       
         self.batch_tab.grid_columnconfigure(0, weight=1)
-        self.batch_tab.grid_rowconfigure(0, weight=45) 
-        self.batch_tab.grid_rowconfigure(1, weight=55) 
+        self.batch_tab.grid_rowconfigure(0, weight=45)
+        self.batch_tab.grid_rowconfigure(1, weight=55)
 
         controls_container = ttk.Frame(self.batch_tab, style='TFrame', padding=(5, 10, 5, 0))
         controls_container.grid(row=0, column=0, sticky='nsew')
@@ -208,7 +205,7 @@ def _load_icons(self):
         ttk.Label(io_content, text="Output Directory (.avi files):").grid(row=2, column=0, columnspan=2, sticky=tk.W, pady=(10, 2))
         ttk.Entry(io_content, textvariable=self.batch_output_dir, font=('Segoe UI', 12)).grid(row=3, column=1, sticky=tk.EW, ipady=4, padx=(0,10))
         ttk.Button(io_content, text="Browse", command=self.select_batch_output_dir).grid(row=3, column=2)
-        
+
         control_frame = RoundedLabelFrame(controls_container, text="Conversion Control")
         control_frame.grid(row=1, column=0, sticky='ew', pady=(15,0))
         control_content = control_frame.content_frame
@@ -238,24 +235,23 @@ def _load_icons(self):
         self.batch_log_text.pack(fill=tk.BOTH, expand=True, padx=0, pady=0)
 
     def _create_trim_tab(self):
-        
         self.trim_tab.grid_columnconfigure(0, weight=1)
-        self.trim_tab.grid_rowconfigure(0, weight=75) 
+        self.trim_tab.grid_rowconfigure(0, weight=75)
         self.trim_tab.grid_rowconfigure(1, weight=25)
-        
+
         main_frame = ttk.Frame(self.trim_tab, style='TFrame', padding=(5, 10, 5, 0))
         main_frame.grid(row=0, column=0, sticky='nsew')
         main_frame.grid_columnconfigure(0, weight=3)
         main_frame.grid_columnconfigure(1, weight=1)
         main_frame.grid_rowconfigure(0, weight=1)
-        
+
         player_container = ttk.Frame(main_frame, style='TFrame')
         player_container.grid(row=0, column=0, sticky='nsew', padx=(0, 10))
         player_container.grid_rowconfigure(0, weight=1)
         player_container.grid_columnconfigure(0, weight=1)
         self.trim_video_label = tk.Label(player_container, text="Select an SVO file to preview", bg='black', fg='white', font=('Segoe UI', 16))
         self.trim_video_label.grid(row=0, column=0, sticky='nsew')
-        
+
         timeline_frame = ttk.Frame(player_container, style= 'TFrame')
         timeline_frame.grid(row=1, column=0, sticky='ew')
         timeline_frame.grid_columnconfigure(0, weight=1)
@@ -265,29 +261,21 @@ def _load_icons(self):
         self.current_time_label = ttk.Label(timeline_frame, text="00:00:00 / 00:00:00", font=('Consolas', 12), background=BG_COLOR, foreground="#cccccc")
         self.current_time_label.grid(row=0, column=1, sticky='e', padx=(0,5))
 
-        
         player_controls_frame = tk.Frame(player_container, bg=BG_COLOR)
         player_controls_frame.grid(row=2, column=0, sticky='ew', pady=(5, 0))
-
-        # Centralize button creation
-        button_configs = {
-            'trim_in': {'icon': self.trim_in_icon, 'cmd': self._set_trim_start},
-            'play_pause': {'icon': self.play_icon, 'cmd': self._toggle_playback},
-            'trim_out': {'icon': self.trim_out_icon, 'cmd': self._set_trim_end}
-        }
 
         # Create a central frame for the buttons so they don't stretch
         center_buttons_frame = tk.Frame(player_controls_frame, bg=BG_COLOR)
         center_buttons_frame.pack()
 
         # Create buttons with icons
-        self.trim_in_button = tk.Button(center_buttons_frame, image=button_configs['trim_in']['icon'], bg=TEAL_COLOR, activebackground=TEAL_ACTIVE_COLOR, relief='flat', borderwidth=0, command=button_configs['trim_in']['cmd'])
+        self.trim_in_button = tk.Button(center_buttons_frame, image=self.trim_in_icon, bg=TEAL_COLOR, activebackground=TEAL_ACTIVE_COLOR, relief='flat', borderwidth=0, command=self._set_trim_start)
         self.trim_in_button.pack(side=tk.LEFT, padx=10)
-        
-        self.play_pause_button = tk.Button(center_buttons_frame, image=button_configs['play_pause']['icon'], bg=TEAL_COLOR, activebackground=TEAL_ACTIVE_COLOR, relief='flat', borderwidth=0, command=button_configs['play_pause']['cmd'])
+
+        self.play_pause_button = tk.Button(center_buttons_frame, image=self.play_icon, bg=TEAL_COLOR, activebackground=TEAL_ACTIVE_COLOR, relief='flat', borderwidth=0, command=self._toggle_playback)
         self.play_pause_button.pack(side=tk.LEFT, padx=10)
 
-        self.trim_out_button = tk.Button(center_buttons_frame, image=button_configs['trim_out']['icon'], bg=TEAL_COLOR, activebackground=TEAL_ACTIVE_COLOR, relief='flat', borderwidth=0, command=button_configs['trim_out']['cmd'])
+        self.trim_out_button = tk.Button(center_buttons_frame, image=self.trim_out_icon, bg=TEAL_COLOR, activebackground=TEAL_ACTIVE_COLOR, relief='flat', borderwidth=0, command=self._set_trim_end)
         self.trim_out_button.pack(side=tk.LEFT, padx=10)
 
         trim_details_frame = ttk.Frame(player_container, style='TFrame', padding=(0, 10))
@@ -297,30 +285,27 @@ def _load_icons(self):
         start_frame_ui = ttk.Frame(trim_details_frame, style='TFrame')
         start_frame_ui.grid(row=0, column=0, sticky='ew', padx=(0, 5))
         ttk.Label(start_frame_ui, text="Start Frame", style='TLabel', background=BG_COLOR).pack(anchor='w')
-        
-        
+
         start_entry_font = ('Segoe UI', 22, 'bold')
         start_entry = ttk.Entry(start_frame_ui, textvariable=self.start_frame_var, style='Frame.TEntry', justify='center', font=start_entry_font)
-        start_entry.pack(fill='x') 
+        start_entry.pack(fill='x')
         start_entry.bind("<Return>", self._on_start_frame_entry)
-        
+
         self.start_time_label = ttk.Label(start_frame_ui, text="00:00:00", style='Time.TLabel')
         self.start_time_label.pack(fill='x', pady=(5,0))
 
         end_frame_ui = ttk.Frame(trim_details_frame, style='TFrame')
         end_frame_ui.grid(row=0, column=1, sticky='ew', padx=(5, 0))
         ttk.Label(end_frame_ui, text="End Frame", background=BG_COLOR).pack(anchor='w')
-        
-        
+
         end_entry_font = ('Segoe UI', 22, 'bold')
         end_entry = ttk.Entry(end_frame_ui, textvariable=self.end_frame_var, style='Frame.TEntry', justify='center', font=end_entry_font)
-        end_entry.pack(fill='x') 
+        end_entry.pack(fill='x')
         end_entry.bind("<Return>", self._on_end_frame_entry)
-        
+
         self.end_time_label = ttk.Label(end_frame_ui, text="00:00:00", style='Time.TLabel')
         self.end_time_label.pack(fill='x', pady=(5,0))
-        
-        
+
         controls_container = ttk.Frame(main_frame, style='TFrame')
         controls_container.grid(row=0, column=1, sticky='nsew')
         controls_container.grid_columnconfigure(0, weight=1)
@@ -351,15 +336,13 @@ def _load_icons(self):
         self.trim_progress.grid(row=0, column=0, sticky='ew', padx=10, pady=(10, 5))
         self.trim_percent_label = ttk.Label(prog_content, text="0%", style='ProgressPercent.TLabel')
         self.trim_percent_label.grid(row=1, column=0, sticky='nsew', pady=(5, 10))
-        
+
         log_frame = RoundedLabelFrame(self.trim_tab, text="Conversion Log")
         log_frame.grid(row=1, column=0, sticky='nsew', padx=5, pady=(15, 10))
         self.trim_log_text = scrolledtext.ScrolledText(log_frame.content_frame, state='disabled', wrap=tk.WORD, bg=FIELD_BG, fg=TEXT_COLOR, relief=tk.FLAT, bd=0, font=('Consolas', 12), height=1, insertbackground=TEXT_COLOR)
         self.trim_log_text.pack(fill=tk.BOTH, expand=True, padx=0, pady=0)
 
-
     def _create_doc_tab(self):
-        
         self.doc_tab.grid_columnconfigure(0, weight=1)
         self.doc_tab.grid_rowconfigure(0, weight=1)
         doc_frame = RoundedLabelFrame(self.doc_tab, text="Documentation")
@@ -370,13 +353,13 @@ def _load_icons(self):
         doc_text.insert(tk.END, "Batch Conversion Tab\n", ('h2',))
         doc_text.insert(tk.END, "1.  Input Directory: Select the folder containing your SVO files.\n2.  Output Directory: Choose where the converted AVI files will be saved.\n3.  Start Conversion: Begins processing all SVO files in the input folder.\n\n")
         doc_text.insert(tk.END, "Trim Settings Tab\n", ('h2',))
-        doc_text.insert(tk.END, "1.  Input Video File: Select a single SVO file to preview and trim.\n2.  Video Timeline: Click or drag the slider to scrub through the video.\n3.  Set Trim Points: Use the '✂ In' and '✂ Out' buttons to mark the start and end of your desired clip.\n4.  Manual Entry: For precise control, type frame numbers into the 'Start/End Frame' boxes and press Enter.\n\n")
+        doc_text.insert(tk.END, "1.  Input Video File: Select a single SVO file to preview and trim.\n2.  Video Timeline: Click or drag the slider to scrub through the video.\n3.  Set Trim Points: Use the player control icons to mark the start and end of your desired clip.\n4.  Manual Entry: For precise control, type frame numbers into the 'Start/End Frame' boxes and press Enter.\n\n")
         doc_text.insert(tk.END, "Important notes\n", ('h2',))
         # --- Hyperlink Text Insertion ---
         doc_text.insert(tk.END, "The SVO converter suit is designed to work on the original script provided by the ZED stereolabs. It was slightly modified to suit the specific needs of the application such as trimming. The guide to install the necessary dependancies are fully documented in the github repository of ")
         doc_text.insert(tk.END, "Samitha Thilakarathna", ('link',)) # The clickable text
         doc_text.insert(tk.END, ", a PhD student of DTU Aqua, Section of Fisheries Technology, Technical University of Denmark.")
-        
+
         doc_text.tag_config('h1', font=('Segoe UI', 18, 'bold'), foreground=TEAL_COLOR, spacing3=10)
         doc_text.tag_config('h2', font=('Segoe UI', 14, 'bold'), foreground=ACCENT_COLOR, spacing3=8)
 
@@ -385,14 +368,13 @@ def _load_icons(self):
         doc_text.tag_bind('link', '<Enter>', lambda e: doc_text.config(cursor="hand2"))
         doc_text.tag_bind('link', '<Leave>', lambda e: doc_text.config(cursor=""))
         doc_text.tag_bind('link', '<Button-1>', self._open_link)
-        
+
         doc_text.config(state='disabled')
 
-    def _open_link(self, evemt):
+    def _open_link(self, event):
         webbrowser.open_new(r"https://github.com/msamdk/SVO_converter_app/blob/main/README.md")
-    
+
     def _toggle_playback(self):
-        
         if self.is_playing:
             self._pause_video()
         else:
@@ -402,19 +384,11 @@ def _load_icons(self):
         if self.is_playing or not self.trim_video_capture: return
         self.is_playing = True
         if self.play_pause_button:
-            # MODIFIED: Use image instead of text
             if self.pause_icon: self.play_pause_button.config(image=self.pause_icon)
         delay = int(1000 / self.trim_fps) if self.trim_fps > 0 else 33
         self._playback_loop(delay)
 
-    def _pause_video(self):
-        self.is_playing = False
-        if self.play_pause_button:
-            # MODIFIED: Use image instead of text
-            if self.play_icon: self.play_pause_button.config(image=self.play_icon)
-
     def _playback_loop(self, delay):
-        
         if self.is_playing:
             current_frame = int(self.timeline_var.get())
             next_frame = current_frame + 1
@@ -424,22 +398,19 @@ def _load_icons(self):
                 self.root.after(delay, lambda: self._playback_loop(delay))
             else:
                 self._pause_video()
-    
+
     def _pause_video(self):
-        
         self.is_playing = False
         if self.play_pause_button:
-            self.play_pause_button.config(text='▶')
-        
+            if self.play_icon: self.play_pause_button.config(image=self.play_icon)
+
     def _format_time(self, frame_num):
-        
         if self.trim_fps > 0:
             secs = frame_num / self.trim_fps
             return str(datetime.timedelta(seconds=int(secs)))
         return "00:00:00"
 
     def _on_timeline_seek(self, value):
-        
         frame_num = int(float(value))
         self._show_frame(frame_num)
         total_time_str = self._format_time(self.trim_total_frames)
@@ -447,7 +418,6 @@ def _load_icons(self):
         self.current_time_label.config(text=f"{current_time_str} / {total_time_str}")
 
     def _show_frame(self, frame_num):
-        
         if isinstance(self.trim_video_capture, sl.Camera) and self.trim_video_capture.is_opened():
             self.trim_video_capture.set_svo_position(frame_num)
             zed_image = sl.Mat()
@@ -472,27 +442,24 @@ def _load_icons(self):
                 self.trim_video_label.image = photo
 
     def _set_trim_start(self):
-        
         if not self.trim_video_capture: return
         self._pause_video()
         self.trim_start_frame = int(self.timeline.get())
         time_str = self._format_time(self.trim_start_frame)
         self.start_time_label.config(text=time_str)
-        self.start_frame_var.set(str(self.trim_start_frame)) 
+        self.start_frame_var.set(str(self.trim_start_frame))
         if self.trim_end_frame < self.trim_start_frame:
             self._set_trim_end(self.trim_start_frame)
 
     def _set_trim_end(self, frame_num=None):
-        
         if not self.trim_video_capture: return
         self._pause_video()
         self.trim_end_frame = int(self.timeline.get()) if frame_num is None else frame_num
         time_str = self._format_time(self.trim_end_frame)
         self.end_time_label.config(text=time_str)
-        self.end_frame_var.set(str(self.trim_end_frame)) 
+        self.end_frame_var.set(str(self.trim_end_frame))
 
     def _on_start_frame_entry(self, event=None):
-        
         if not self.trim_video_capture: return
         try:
             frame_num = int(self.start_frame_var.get())
@@ -505,9 +472,8 @@ def _load_icons(self):
                 self.start_frame_var.set(str(self.trim_start_frame))
         except (ValueError, TypeError):
             self.start_frame_var.set(str(self.trim_start_frame))
-            
+
     def _on_end_frame_entry(self, event=None):
-        
         if not self.trim_video_capture: return
         try:
             frame_num = int(self.end_frame_var.get())
@@ -522,7 +488,6 @@ def _load_icons(self):
             self.end_frame_var.set(str(self.trim_end_frame))
 
     def _select_trim_input_file(self):
-        
         self._pause_video()
         file_path = filedialog.askopenfilename(
             title="Select Input SVO File",
@@ -553,31 +518,27 @@ def _load_icons(self):
 
         self.timeline.config(state='normal', to=self.trim_total_frames - 1)
         self.timeline_var.set(0)
-        
+
         self._on_timeline_seek(0)
         self._set_trim_start()
         self._set_trim_end(self.trim_total_frames - 1)
-    
+
     def _select_trim_output_dir(self):
-        
         dir_path = filedialog.askdirectory(title="Select Output Directory for Trimmed File")
         if dir_path: self.trim_output_dir.set(dir_path)
 
     def select_batch_input_dir(self):
-        
         dir_path = filedialog.askdirectory(title="Select Input Directory")
         if dir_path: self.batch_input_dir.set(dir_path)
 
     def select_batch_output_dir(self):
-        
         dir_path = filedialog.askdirectory(title="Select Output Directory")
         if dir_path: self.batch_output_dir.set(dir_path)
 
     def log(self, message): self.log_queue.put(message)
     def update_progress(self, target, percent): self.progress_queue.put((target, percent))
-    
+
     def process_queues(self):
-        
         try:
             while not self.log_queue.empty():
                 message = self.log_queue.get_nowait()
@@ -588,7 +549,7 @@ def _load_icons(self):
                         log_widget.see(tk.END)
                         log_widget.config(state='disabled')
         except queue.Empty: pass
-        
+
         try:
             while not self.progress_queue.empty():
                 target, percent = self.progress_queue.get_nowait()
@@ -602,7 +563,6 @@ def _load_icons(self):
         finally: self.root.after(100, self.process_queues)
 
     def _clear_logs(self):
-        
         for log_widget in [self.batch_log_text, self.trim_log_text]:
             if log_widget:
                 log_widget.config(state='normal')
@@ -610,7 +570,6 @@ def _load_icons(self):
                 log_widget.config(state='disabled')
 
     def start_batch_conversion(self):
-        
         input_dir = self.batch_input_dir.get()
         output_dir = self.batch_output_dir.get()
         if not os.path.isdir(input_dir) or not os.path.isdir(output_dir):
@@ -622,7 +581,6 @@ def _load_icons(self):
         threading.Thread(target=self.run_batch_conversion_thread, args=(input_dir, output_dir), daemon=True).start()
 
     def _start_trim_conversion(self):
-        
         input_file = self.trim_input_file.get()
         output_dir = self.trim_output_dir.get()
         if not os.path.isfile(input_file) or not os.path.isdir(output_dir):
@@ -634,7 +592,6 @@ def _load_icons(self):
         threading.Thread(target=self._run_trim_conversion_thread, args=(input_file, output_dir), daemon=True).start()
 
     def stop_conversion(self):
-        
         self._pause_video()
         self.log("Stopping conversion...\n")
         self.stop_event.set()
@@ -642,7 +599,6 @@ def _load_icons(self):
             self.running_process.terminate()
 
     def set_gui_state(self, is_running, mode):
-        
         if is_running:
             self.start_button.config(state='disabled')
             self.trim_start_button.config(state='disabled')
@@ -658,7 +614,6 @@ def _load_icons(self):
             self.stop_button.config(state='disabled')
 
     def run_batch_conversion_thread(self, input_path, output_path):
-        # Unchanged
         svo_files = sorted([f for f in os.listdir(input_path) if f.lower().endswith(('.svo', '.svo2'))])
         if not svo_files:
             self.log("No .svo or .svo2 files found.\n")
@@ -698,23 +653,22 @@ def _load_icons(self):
         if not self.stop_event.is_set():
             self.overall_progress['value'] = len(svo_files)
         self.root.after(0, lambda: self.set_gui_state(False, 'batch'))
-        
+
     def _run_trim_conversion_thread(self, input_file, output_dir):
-        # Unchanged
         self.log(f"Starting trim conversion for: {os.path.basename(input_file)}\n")
         self.update_progress('trim', 0)
         base_name = os.path.splitext(os.path.basename(input_file))[0]
-        
+
         output_filename = os.path.join(output_dir, f"{base_name}_trimmed_{self.trim_start_frame}_{self.trim_end_frame}.avi")
-        
+
         command = [
-            "python", "-u", "svo_export.py", "--mode", "0", 
-            "--input_svo_file", input_file, 
+            "python", "-u", "svo_export.py", "--mode", "0",
+            "--input_svo_file", input_file,
             "--output_avi_file", output_filename,
             "--start_frame", str(self.trim_start_frame),
             "--end_frame", str(self.trim_end_frame)
         ]
-        
+
         try:
             creationflags = 0
             if os.name == 'nt': creationflags = subprocess.CREATE_NO_WINDOW
@@ -738,7 +692,7 @@ def _load_icons(self):
             self.log(f"SUCCESS: Trimmed video saved to {output_filename}\n{'='*50}\n")
         elif return_code != 0:
             self.log(f"ERROR: Conversion script failed with exit code {return_code}.\n{'='*50}\n")
-        
+
         self.root.after(0, lambda: self.set_gui_state(False, 'trim'))
 
 if __name__ == "__main__":
@@ -746,5 +700,3 @@ if __name__ == "__main__":
     app = SVOConverterApp(root)
 
     root.mainloop()
-
-
