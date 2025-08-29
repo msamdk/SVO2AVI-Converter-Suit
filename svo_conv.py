@@ -75,6 +75,7 @@ class RoundedLabelFrame(tk.Frame):
         self.content_frame.place(in_=self._canvas, x=2, y=2, relwidth=1, relheight=1, width=-4, height=-4)
 
 class SVOConverterApp:
+    
     def __init__(self, root):
         self.root = root
         self.root.title("SVO Converter Suite")
@@ -120,6 +121,33 @@ class SVOConverterApp:
         
         self.root.after(100, self.process_queues)
 
+        self.play_icon = None
+        self.pause_icon = None
+        self.trim_in_icon = None
+        self.trim_out_icon = None
+        self._load_icons() # Call the new method to load icons
+        
+def _load_icons(self):
+        """Loads and resizes icons from the 'icons' subfolder."""
+        try:
+            # Construct path to the icons folder relative to the script
+            script_dir = os.path.dirname(__file__)
+            icon_path = os.path.join(script_dir, "icons")
+            
+            # Define desired icon size
+            icon_size = (24, 24) # Adjust size as needed for your UI
+
+            # Load, resize, and store each icon
+            self.play_icon = ImageTk.PhotoImage(Image.open(os.path.join(icon_path, "play.png")).resize(icon_size, Image.Resampling.LANCZOS))
+            self.pause_icon = ImageTk.PhotoImage(Image.open(os.path.join(icon_path, "pause.png")).resize(icon_size, Image.Resampling.LANCZOS))
+            self.trim_in_icon = ImageTk.PhotoImage(Image.open(os.path.join(icon_path, "trim_in.png")).resize(icon_size, Image.Resampling.LANCZOS))
+            self.trim_out_icon = ImageTk.PhotoImage(Image.open(os.path.join(icon_path, "trim_out.png")).resize(icon_size, Image.Resampling.LANCZOS))
+            
+            self.log("Icons loaded successfully.\n")
+        except Exception as e:
+            self.log(f"Error loading icons: {e}\n")
+            self.play_icon = self.pause_icon = self.trim_in_icon = self.trim_out_icon = None
+            
     
 
     def _create_styles(self):
@@ -699,3 +727,4 @@ if __name__ == "__main__":
     app = SVOConverterApp(root)
 
     root.mainloop()
+
