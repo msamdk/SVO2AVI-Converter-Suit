@@ -95,7 +95,7 @@ python svo_conv.py
 * Navigate to the **Trim Settings** tab.
 * Under "Select Files & Convert", click **Browse** to select a single **Input Video File** (.svo or .svo2).
 * The video will load in the preview panel. Use the **timeline slider** or the **▶/⏸** button to find the segment you want to trim.
-* Use the **✂ In** and **✂ Out** buttons to mark the start and end points of your clip. For more precision, you can type frame numbers directly into the **Start/End Frame** boxes and press `Enter`.
+* Use the **Trim In** and **Trim Out** buttons to mark the start and end points of your clip. For more precision, you can type frame numbers directly into the **Start/End Frame** boxes and press `Enter`.
 * Select an **Output Directory**.
 * Click **Start Conversion** to export only the trimmed section.
 
@@ -109,7 +109,7 @@ python svo_conv.py
 --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## License
-- The batch converter GUI (batch_converter_gui.py) is released under the MIT License.
+- The batch converter GUI (svo_conv.py) is released under the MIT License.
 
 ## Acknowledgments
 
