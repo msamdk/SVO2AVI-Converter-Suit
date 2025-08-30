@@ -4,6 +4,7 @@ A user-friendly desktop application for batch converting and trimming ZED SVO fi
 
 <img src="images/batch conv.png" alt="Alt text" width="800">
 <img src="images/trim_settings.png" alt="Alt text" width="800">
+
 ![Demo GIF](images/gif.gif)
 
 You can find the main svo to avi conversion script in the following path of the zed-sdk repository of stereolabs. But i have added the script in this repository.
