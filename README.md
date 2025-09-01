@@ -3,7 +3,6 @@
 A user-friendly desktop application for batch converting and trimming ZED SVO files to the AVI format. This tool provides a graphical user interface (GUI) to simplify the video export process, leveraging the power of the Stereolabs ZED SDK. You can also clone the zed-sdk repository from [here](https://github.com/stereolabs/zed-sdk.git). 
 
 <img src="images/batch conv.png" alt="Alt text" width="800">
-<img src="images/trim_settings.png" alt="Alt text" width="800">
 
 ![Demo GIF](images/gif.gif)
 
