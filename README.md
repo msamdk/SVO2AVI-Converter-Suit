@@ -40,6 +40,8 @@ Before you begin, ensure you have the following installed:
   - [ZED documentation - Python](https://www.stereolabs.com/docs/development/python/virtual_env).
     
   <img src="images/stereolabs.png" alt="Alt text" width="1000">
+
+  
  - **NVIDIA CUDA**: The ZED SDK requires a compatible version of the NVIDIA CUDA Toolkit.   
 
 - **Required Python Libraries**: (Use the requirements.txt file)
