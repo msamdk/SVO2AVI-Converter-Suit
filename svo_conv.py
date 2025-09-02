@@ -8,6 +8,8 @@
 #   CONTINUOUSLY TO MEET THE ONGOING RESEARCH NEEDS.
 
 #   DEVELOPED BY SAMITHA N. THILARATHNA, PhD STUDENT, DTU AQUA
+#   email: msam@aqua.dtu.dk
+#   last updated on September 2025
 
 
 #############################################################################################
@@ -737,3 +739,4 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = SVOConverterApp(root)
     root.mainloop()
+
