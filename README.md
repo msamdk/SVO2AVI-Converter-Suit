@@ -34,21 +34,17 @@ Before you begin, ensure you have the following installed:
 - **Python 3.7+**
 
 - **ZED SDK**: This is the most crucial requirement. You must install the SDK from the Stereolabs website.
-
-  - ➡️ Download the [ZED SDK](https://www.stereolabs.com/en-dk/developers/release/5.0).
-  - Important: During the ZED SDK installation, make sure to install the Python API. follow the instructions of the documentation in the official website of the stereolabs website
-  - [ZED documentation - Python](https://www.stereolabs.com/docs/development/python/virtual_env).
-    
-  <img src="images/stereolabs.png" alt="Alt text" width="1000">
-
+  - [![Download ZED SDK](https://img.shields.io/badge/Download-ZED%20SDK-0078D7?style=for-the-badge&logo=stereolabs)](https://www.stereolabs.com/en-dk/developers/release/5.0)
+  - **Important**: During the ZED SDK installation, make sure to install the Python API. For instructions, follow the official documentation.
+  - [![ZED Documentation](https://img.shields.io/badge/Documentation-ZED%20Python%20API-informational?style=for-the-badge&logo=python&logoColor=white)](https://www.stereolabs.com/docs/development/python/virtual_env)
   
- - **NVIDIA CUDA**: The ZED SDK requires a compatible version of the NVIDIA CUDA Toolkit.   
+- **NVIDIA CUDA**: The ZED SDK requires a compatible version of the NVIDIA CUDA Toolkit.
 
 - **Required Python Libraries**: (Use the requirements.txt file)
-    - pyzed (This is installed with the ZED SDK's Python API)
-    - opencv-python
-    - numpy
-    - Pillow
+  - `pyzed` (This is installed with the ZED SDK's Python API)
+  - `opencv-python`
+  - `numpy`
+  - `Pillow`
  
   
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
