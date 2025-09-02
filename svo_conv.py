@@ -613,6 +613,14 @@ class SVOConverterApp:
         elif mode == 'trim':
             self.trim_stop_button.config(state='normal' if is_running else 'disabled')
             self.stop_button.config(state='disabled')
+    
+    ########## Batch conversion #################
+    # here you can define the mode of the conversion
+    # mode Mode 0 is to export LEFT+RIGHT AVI.
+    # Mode 1 is to export LEFT+DEPTH_VIEW Avi.
+    # Mode 2 is to export LEFT+RIGHT image sequence.
+    # Mode 3 is to export LEFT+DEPTH_View image sequence.
+    # Mode 4 is to export LEFT+DEPTH_16BIT image sequence.
 
     def run_batch_conversion_thread(self, input_path, output_path):
         svo_files = sorted([f for f in os.listdir(input_path) if f.lower().endswith(('.svo', '.svo2'))])
@@ -655,6 +663,9 @@ class SVOConverterApp:
             self.overall_progress['value'] = len(svo_files)
         self.root.after(0, lambda: self.set_gui_state(False, 'batch'))
 
+    ###### trim conversion thread #########
+    # same as the batch conversion logic, you can define the mode of the conversion here as above
+
     def _run_trim_conversion_thread(self, input_file, output_dir):
         self.log(f"Starting trim conversion for: {os.path.basename(input_file)}\n")
         self.update_progress('trim', 0)
@@ -691,6 +702,11 @@ class SVOConverterApp:
             self.log(f"ERROR: Conversion script failed with exit code {return_code}.\n{'='*50}\n")
         self.root.after(0, lambda: self.set_gui_state(False, 'trim'))
 
+    ##### Image export thread #########
+    # in here the thread does not use the external script like the video conversion thread above.
+    # instead it is handled directly in thihs function to extract the left image of the original file
+    # the function iterates through the selected frames and saves them as PNG images in a new folder
+
     def _run_image_export_thread(self, input_file, output_dir):
         """The actual worker process for exporting frames to images."""
         base_name = os.path.splitext(os.path.basename(input_file))[0]
@@ -716,8 +732,8 @@ class SVOConverterApp:
                     self.log("Image export stopped by user.\n")
                     break
                 zed.set_svo_position(frame_num)
-                if zed.grab() == sl.ERROR_CODE.SUCCESS:
-                    zed.retrieve_image(zed_image, sl.VIEW.LEFT)
+                if zed.grab() == sl.ERROR_CODE.SUCCESS: # capture all data for a single moment in time, including the image from left sensor, right sensor, calculated depth map etc.
+                    zed.retrieve_image(zed_image, sl.VIEW.LEFT) # Extract left image but this is a limited application. Will update for more options later by sourcing the external script.
                     frame_data = zed_image.get_data()
                     frame_rgb = cv2.cvtColor(frame_data, cv2.COLOR_BGRA2RGB)
                     img = Image.fromarray(frame_rgb)
@@ -739,4 +755,5 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = SVOConverterApp(root)
     root.mainloop()
+
 
