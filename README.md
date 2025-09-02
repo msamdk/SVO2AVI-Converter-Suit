@@ -37,7 +37,8 @@ Before you begin, ensure you have the following installed:
 
   - ➡️ Download the [ZED SDK](https://www.stereolabs.com/en-dk/developers/release/5.0).
   - Important: During the ZED SDK installation, make sure to install the Python API. follow the instructions of the documentation in the official website of the stereolabs website
-  - [ZED documentation - Python]([https://www.stereolabs.com/en-dk/developers/release/5.0](https://www.stereolabs.com/docs/development/python/install)](https://www.stereolabs.com/docs/development/python/virtual_env)).
+  - [ZED documentation - Python](https://www.stereolabs.com/docs/development/python/virtual_env).
+    
   <img src="images/stereolabs.png" alt="Alt text" width="1000">
  - **NVIDIA CUDA**: The ZED SDK requires a compatible version of the NVIDIA CUDA Toolkit.   
 
